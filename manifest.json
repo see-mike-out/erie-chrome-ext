@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Erie Chrome Extension",
+  "version": "0.1",
+  "description": "Enables recording a sonification generated using Erie interface.",
+  "icons": {
+    "16": "images/erie-logo-16.png",
+    "32": "images/erie-logo-32.png",
+    "48": "images/erie-logo-48.png",
+    "128": "images/erie-logo-128.png"
+  },
+  "content_scripts": [{
+    "matches": ["*://*/*"],
+    "js": ["./scripts/content.js"]
+  }],
+  "action": {
+    "default_icon": "images/erie-logo-32.png"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "permissions": [
+    "storage",
+    "scripting",
+    "activeTab",
+    "nativeMessaging",
+    "tabs",
+    "tabCapture",
+    "downloads"
+  ]
+}
