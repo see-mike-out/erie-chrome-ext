@@ -114,7 +114,6 @@ function getNextRecordingId() {
 window.addEventListener('beforeunload', shutdownReceiver);
 
 function returnRecorded(e) {
-  console.log(chunks, recordingOrder, chunk_map);
   let htmlParts = [], ssmlParts = [];
   for (let id of recordingOrder) {
     if (chunk_map[id]) {
@@ -182,13 +181,14 @@ body {
 </style>`;
 
 function makeSpeechPart(sid, part) {
+  if (!part) return "";
   let rate = 180;
-  if (part?.speechRate) rate = Math.round(180 * part.speechRate);
+  if (part?.speechRate) rate = Math.round(180 * part?.speechRate);
   let language = part?.language ? ` data-lang="${part.language}"` : '';
   let pitch = part?.pitch !== undefined ? ` data-pitch="${part.pitch}"` : '';
   let loudness = part?.loudness !== undefined ? ` data-volume="${part.loudness}"` : '';
   let output =
-    `  <p id="speech-${sid}" style="speech-rate: ${rate};" data-web-speech-rate="${part.speechRate || 1}"${language}${pitch}${loudness}>
+    `  <p id="speech-${sid}" style="speech-rate: ${rate};" data-web-speech-rate="${part?.speechRate || 1}"${language}${pitch}${loudness}>
     ${part.speech}
   </p>`;
   return output;
@@ -224,6 +224,7 @@ function makeHTML(pid, parts) {
 }
 
 function makeSSMLPart(sid, part) {
+  if (!part) return "";
   let language = part?.language ? ` language="${part.language}"` : '';
   let output = `<s id="speech-${sid}"${language}> ${part.speech}</s>`;
   return output;
