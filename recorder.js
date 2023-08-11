@@ -119,7 +119,6 @@ function returnRecorded(e) {
     if (chunk_map[id]) {
       let [s, e] = chunk_map[id];
       let item = chunks.slice(s, e);
-      console.log(id, s, e, item);
       let downloadButton = document.createElement("A");
       downloadButton.innerText = "Download (Audio " + id + ")";
       downloadButton.setAttribute("id", null);
