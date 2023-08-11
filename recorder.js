@@ -197,9 +197,10 @@ function makeHTML(pid, parts) {
 <html>
   <head>
     <title>Erie Sonification Output${pid ? ' for ' + pid : ''}</title>
+    ${css}
   </head>
   <body>
-    <h1>Erie Sonification Output${pid ? ' for ' + pid : ''}</h1>`;
+    <h1>Erie Sonification Output</h1>`;
   let body = parts.join("\n");
   let footer =
     `  </body>
