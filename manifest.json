@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Erie Chrome Extension",
+  "name": "Erie Recorder for Chrome",
   "version": "0.1",
   "description": "Enables recording a sonification generated using Erie for Web.",
   "icons": {
@@ -19,11 +19,7 @@
   "background": {
     "service_worker": "service-worker.js"
   },
-  "permissions": [
-    "storage",
-    "scripting",
-    "activeTab",
-    "nativeMessaging",
+  "permissions": [ 
     "tabs",
     "tabCapture",
     "downloads"
