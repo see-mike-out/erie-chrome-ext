@@ -115,7 +115,7 @@ window.addEventListener('beforeunload', shutdownReceiver);
 
 function returnRecorded(e) {
   console.log(chunks, recordingOrder, chunk_map);
-  let htmlParts = [];
+  let htmlParts = [], ssmlParts = [];
   for (let id of recordingOrder) {
     if (chunk_map[id]) {
       let [s, e] = chunk_map[id];
@@ -134,10 +134,13 @@ function returnRecorded(e) {
         console.log("downloaded: ", downloadId)
       });
       htmlParts.push(makeAudioPart(id));
+      ssmlParts.push(makeSSMLAudioPart(id));
     } else {
       htmlParts.push(makeSpeechPart(id, speeches[id]));
+      ssmlParts.push(makeSSMLPart(id, speeches[id]));
     }
   }
+  // html
   let html = makeHTML(playId, htmlParts);
   let htmlBlob = new Blob([html], { type: "text/html" });
   let htmlUrl = URL.createObjectURL(htmlBlob);
@@ -151,6 +154,20 @@ function returnRecorded(e) {
   chrome.downloads.download({ url: htmlUrl, filename: htmlFilename }, (downloadId) => {
     console.log("downloaded: ", downloadId)
   });
+  // ssml
+  let ssml = makeSSML(ssmlParts);
+  let ssmlBlob = new Blob([ssml], { type: "text/html" });
+  let ssmlUrl = URL.createObjectURL(ssmlBlob);
+  let ssmlDownloadButton = document.createElement("A");
+  ssmlDownloadButton.innerText = "Download (SSML)";
+  ssmlDownloadButton.setAttribute("id", null);
+  let ssmlFilename = "erie-doc-" + playId + ".ssml";
+  ssmlDownloadButton.download = ssmlFilename;
+  ssmlDownloadButton.setAttribute("href", ssmlUrl);
+  document.getElementById("download").append(ssmlDownloadButton);
+  chrome.downloads.download({ url: ssmlUrl, filename: ssmlFilename }, (downloadId) => {
+    console.log("downloaded: ", downloadId)
+  });
 }
 
 function audioFileName(id) {
@@ -162,9 +179,7 @@ const css = `
 body {
   font-family: sans-serif;
 }
-</style>
-`
-
+</style>`;
 
 function makeSpeechPart(sid, part) {
   let rate = 180;
@@ -182,7 +197,7 @@ function makeSpeechPart(sid, part) {
 function makeAudioPart(sid) {
   let filename = audioFileName(sid);
   let output =
-`  <section>
+    `  <section>
     <audio id="audio-${sid}" controls>
       <source src="${filename}" type="${mime}">
       Your browser does not support the audio element.
@@ -205,5 +220,24 @@ function makeHTML(pid, parts) {
   let footer =
     `  </body>
 </html>`;
+  return header + body + footer;
+}
+
+function makeSSMLPart(sid, part) {
+  let language = part?.language ? ` language="${part.language}"` : '';
+  let output = `<s id="speech-${sid}"${language}> ${part.speech}</s>`;
+  return output;
+}
+
+function makeSSMLAudioPart(sid) {
+  let filename = audioFileName(sid);
+  let output = `<audio src="${filename}">didn't get the audio file</audio>`;
+  return output;
+}
+
+function makeSSML(parts) {
+  let header = `<speak>`;
+  let body = parts.join("\n");
+  let footer = `<\speak>`;
   return header + body + footer;
 }
