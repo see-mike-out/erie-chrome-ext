@@ -20,7 +20,6 @@
     "service_worker": "service-worker.js"
   },
   "permissions": [ 
-    "tabs",
     "tabCapture",
     "downloads"
   ]

@@ -154,7 +154,7 @@ function returnRecorded(e) {
   });
   // ssml
   let ssml = makeSSML(ssmlParts);
-  let ssmlBlob = new Blob([ssml], { type: "text/html" });
+  let ssmlBlob = new Blob([ssml], { type: "text" });
   let ssmlUrl = URL.createObjectURL(ssmlBlob);
   let ssmlDownloadButton = document.createElement("A");
   ssmlDownloadButton.innerText = "Download (SSML)";
