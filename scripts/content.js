@@ -34,7 +34,7 @@ function connectRecorder() {
   document.body.addEventListener("erieOnFinishTone", (e) => {
     if (window.soundId.includes(e.detail?.sid)) {
       console.log(`Part-recording finishes for tone. ID: ${e.detail.sid}`);
-      soundId.splice(soundId.indexOf(e.detail.sid), 1);
+      window.soundId.splice(soundId.indexOf(e.detail.sid), 1);
       if (window.soundId.length == 0) {
         // finish;
         finishRecord(e.detail.sid);
@@ -65,6 +65,7 @@ function connectRecorder() {
 
   let readyEvent = new Event("erieOnRecorderReady");
   document.body.dispatchEvent(readyEvent);
+  window.erieRecorderReady = true;
 }
 
 function readyRecord(pid) {
